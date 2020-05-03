@@ -5,6 +5,7 @@ mod counting_sort;
 mod heap_sort;
 mod merge_sort;
 mod selection_sort;
+mod shell_sort;
 
 
 fn main() {
