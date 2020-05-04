@@ -17,7 +17,15 @@ fn main() {
 }
 
 
-fn create_vector(length: i32) {
+fn create_shuffled_vector(length: i32) -> Vec<i32> {
     let mut vec: Vec<i32> = (0..length).collect();
-    vec.shuffle(&mut thread_rng())
+    vec.shuffle(&mut thread_rng());
+    vec
+}
+
+
+fn create_reversed_vector(length: i32) -> Vec<i32> {
+    let mut vec: Vec<i32> = (0..length).collect();
+    vec.reverse();
+    vec
 }
