@@ -1,12 +1,12 @@
 #[macro_use]
 #[warn(unused_imports)]
+
 extern crate stdweb;
 extern crate  instant;
 
 use crate::canvas::Canvas;
 use std::borrow::{Borrow, BorrowMut};
 use bubble_sort::bubble_sort;
-
 
 mod bubble_sort;
 mod random_sort;
@@ -21,13 +21,13 @@ mod canvas;
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 use stdweb::web::{set_timeout, document, INonElementParentNode, Element, IParentNode};
-use instant::{Instant,Duration};
+use instant::{Instant};
 
 
 fn main() {
     stdweb::initialize();
 
-    let mut array = create_reversed_vector(100);
+    let mut array = create_shuffled_vector(25);
     let max = array.iter().max().unwrap().clone();
     let canvas = Canvas::new("canvas", array.len() as u32, max + 5);
     let mut sorting_steps: Vec<Vec<u32>> = vec![array.clone()];
@@ -72,7 +72,7 @@ fn draw_column(canvas: &Canvas, height: u32, position: u32) {
     }
 }
 
-fn create_shuffled_vector(length: u32) -> Vec<u32> {
+pub fn create_shuffled_vector(length: u32) -> Vec<u32> {
     let mut vec: Vec<u32> = (1..length+1).collect();
     vec.shuffle(&mut thread_rng());
     vec
