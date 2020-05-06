@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 rand = { version = "0.7"}
 stdweb = "0.4.20"
+instant = { version = "0.1", features = [ "stdweb" ] }

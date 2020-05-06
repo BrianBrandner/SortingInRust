@@ -1,6 +1,7 @@
 #[macro_use]
 #[warn(unused_imports)]
 extern crate stdweb;
+extern crate  instant;
 
 use crate::canvas::Canvas;
 use std::borrow::{Borrow, BorrowMut};
@@ -19,30 +20,29 @@ mod canvas;
 
 use rand::thread_rng;
 use rand::seq::SliceRandom;
-use stdweb::web::set_timeout;
+use stdweb::web::{set_timeout, document, INonElementParentNode, Element, IParentNode};
+use instant::{Instant,Duration};
+
 
 fn main() {
     stdweb::initialize();
-    js! {
 
-        alert("Your screen resolution is: " + window.screen.width * window.devicePixelRatio + "x" + window.screen.height * window.devicePixelRatio);
-
-    }
-
-    let mut array = create_reversed_vector(14);
+    let mut array = create_reversed_vector(100);
     let max = array.iter().max().unwrap().clone();
     let canvas = Canvas::new("canvas", array.len() as u32, max + 5);
     let mut sorting_steps: Vec<Vec<u32>> = vec![array.clone()];
+    let start = Instant::now();
     bubble_sort(array.borrow_mut(), sorting_steps.borrow_mut());
+    let duration = start.elapsed().as_micros() as i32;
+    let some_element = document().query_selector("#elapsed_time").unwrap().unwrap();
+
+    js!{
+    @{some_element}.innerHTML = @{duration};
+    };
+
     draw_step(canvas, sorting_steps);
     stdweb::event_loop();
 }
-
-//pub fn draw_update(canvas: &Canvas, array: &Vec<u32>){
-//    set_timeout(move ||{
-//        draw_array(canvas.borrow(),array.borrow())
-//    }, 1000);
-//}
 
 fn draw_step(canvas: Canvas, mut steps:  Vec<Vec<u32>>){
     set_timeout(move ||{
@@ -56,7 +56,7 @@ fn draw_step(canvas: Canvas, mut steps:  Vec<Vec<u32>>){
 
 
 fn draw_array(canvas: &Canvas, array: &Vec<u32>) {
-    canvas.set_canvase_color("grey");
+    canvas.set_canvase_color("#ccd1d1");
     let mut i: i32 = 0;
     while i < array.len() as i32 {
         draw_column(canvas.borrow(), array[i as usize] as u32, i as u32);
