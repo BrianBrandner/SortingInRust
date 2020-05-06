@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual sorting</title>
+    <link rel="stylesheet" href=style.css>
+    <script>
+        function show_time_value(x)
+        {
+            document.getElementById("slider_time_value").innerHTML=x;
+        }
+
+        function show_size_value(x)
+        {
+            document.getElementById("slider_size_value").innerHTML=x;
+        }
+    </script>
+</head>
+<body>
+    <canvas id="canvas" width="1850" height="800">
+    </canvas>
+    <script src="sorting_in_rust.js"></script>
+    <label><br>Sorting Algorithm:
+        <select id = "sorting">
+            <option>Bubblesort</option>
+            <option>Quicksort</option>
+            <option>etc.</option>
+        </select>
+    </label>
+    <label>
+        Generating Algorithm:
+        <select id = "generating">
+            <option>Random</option>
+            <option>Reversed</option>
+            <option>Sorted</option>
+            <option>etc.</option>
+        </select>
+    </label>
+    <button type="button">Click Me!</button>
+    Time needed to sort: <span id="elapsed_time">--</span>μs<br>
+    <div class="slidecontainer"> Time between steps: <span id="slider_time_value">333</span>ms <br>
+        <input type="range" min="0" max="1000" value="333" class="slider" id="millsec"  oninput="show_time_value(this.value);">
+    </div>
+    <div class="slidecontainer"> Size of array: <span id="slider_size_value">25</span> numbers<br>
+        <input type="range" min="10" max="100" value="25" class="slider" id="size" oninput="show_size_value(this.value);">
+    </div>
+</body>
+</html>
