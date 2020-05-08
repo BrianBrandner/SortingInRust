@@ -27,6 +27,7 @@ use std::rc::Rc;
 use std::sync::{RwLock, Mutex};
 use crate::shell_sort::ShellSort;
 use crate::selection_sort::SelectionSort;
+use crate::quick_sort::QuickSort;
 
 trait SortingAlg {
     fn sort(&self,array: & mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
@@ -59,7 +60,7 @@ fn main() {
         if let Some(process) = &current_process{
             process.write().unwrap().abort = true;
         }
-        current_process = Some(start_sorting(length,delay.clone(), &SelectionSort));
+        current_process = Some(start_sorting(length,delay.clone(), &QuickSort));
     });
     stdweb::event_loop();
 }
