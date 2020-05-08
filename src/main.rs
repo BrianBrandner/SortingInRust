@@ -25,6 +25,7 @@ use instant::{Instant};
 use stdweb::web::event::{ClickEvent, IEvent, InputEvent};
 use std::rc::Rc;
 use std::sync::{RwLock, Mutex};
+use crate::shell_sort::ShellSort;
 
 trait SortingAlg {
     fn sort(&self,array: & mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
@@ -57,7 +58,7 @@ fn main() {
         if let Some(process) = &current_process{
             process.write().unwrap().abort = true;
         }
-        current_process = Some(start_sorting(length,delay.clone(), &BubbleSort));
+        current_process = Some(start_sorting(length,delay.clone(), &ShellSort));
     });
     stdweb::event_loop();
 }
