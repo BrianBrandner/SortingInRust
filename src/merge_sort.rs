@@ -1,12 +1,16 @@
-fn _merge(arr: &mut [i32], lo: usize, mid: usize, hi: usize) {
+use crate::SortingAlg;
+
+pub struct MergeSort;
+
+fn _merge(array: &mut Vec<u32>, lo: usize, mid: usize, hi: usize, steps: &mut Vec<Vec<u32>>) {
     // create temporary arrays to support merge
     let mut left_half = Vec::new();
     let mut right_half = Vec::new();
     for i in lo..mid + 1 {
-        left_half.push(arr[i]);
+        left_half.push(array[i]);
     }
     for i in mid + 1..hi + 1 {
-        right_half.push(arr[i]);
+        right_half.push(array[i]);
     }
 
     let lsize = left_half.len();
@@ -20,10 +24,10 @@ fn _merge(arr: &mut [i32], lo: usize, mid: usize, hi: usize) {
     // pick smaller element one by one from either left or right half
     while l < lsize && r < rsize {
         if left_half[l] < right_half[r] {
-            arr[a] = left_half[l];
+            array[a] = left_half[l];
             l += 1;
         } else {
-            arr[a] = right_half[r];
+            array[a] = right_half[r];
             r += 1;
         }
         a += 1;
@@ -31,30 +35,33 @@ fn _merge(arr: &mut [i32], lo: usize, mid: usize, hi: usize) {
 
     // put all the remaining ones
     while l < lsize {
-        arr[a] = left_half[l];
+        array[a] = left_half[l];
         l += 1;
         a += 1;
     }
 
     while r < rsize {
-        arr[a] = right_half[r];
+        array[a] = right_half[r];
         r += 1;
         a += 1;
     }
+    steps.push(array.clone())
 }
 
-fn _merge_sort(arr: &mut [i32], lo: usize, hi: usize) {
+fn _merge_sort(array: &mut Vec<u32>, lo: usize, hi: usize, steps: &mut Vec<Vec<u32>>) {
     if lo < hi {
         let mid = lo + (hi - lo) / 2;
-        _merge_sort(arr, lo, mid);
-        _merge_sort(arr, mid + 1, hi);
-        _merge(arr, lo, mid, hi);
+        _merge_sort(array, lo, mid, steps);
+        _merge_sort(array, mid + 1, hi, steps);
+        _merge(array, lo, mid, hi, steps);
     }
 }
 
-pub fn merge_sort(arr: &mut [i32]) {
-    let len = arr.len();
-    if len > 1 {
-        _merge_sort(arr, 0, len - 1);
+impl SortingAlg for MergeSort {
+    fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
+        let len = array.len();
+        if len > 1 {
+            _merge_sort(array, 0, len - 1, steps);
+        }
     }
 }
