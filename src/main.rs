@@ -25,7 +25,7 @@ mod canvas;
 
 use rand::thread_rng;
 use rand::seq::SliceRandom;
-use stdweb::web::{set_timeout, document, INonElementParentNode, Element, IParentNode, IEventTarget, IElement};
+use stdweb::web::{set_timeout, document, INonElementParentNode, Element, IParentNode, IEventTarget, IElement, INode};
 use instant::{Instant};
 use stdweb::web::event::{ClickEvent, IEvent, InputEvent};
 use std::rc::Rc;
@@ -55,26 +55,31 @@ fn main() {
         let attr_value = slider_time.get_attribute("value").unwrap();
         *temp_rc.write().unwrap() = attr_value.parse().expect("not an Number");
     });
+
     let mut current_process: Option<Rc<RwLock<SortingProcess>>> = None;
+
     let button = document().query_selector( "#start" ).unwrap().unwrap();
     button.add_event_listener( move | sorting: ClickEvent| {
         if let Some(process) = &current_process {
             process.write().unwrap().abort = true;
         }
-//        let sorting_selection = document().query_selector("#sorting").unwrap().unwrap().get_attribute("value").unwrap();
-//        let sorting_alg: SortingAlg = match sorting_selection.as_str() {
-//            "bubble" => BubbleSort,
-//            "quick" => QuickSort,
-////            String::from("counting") => (),
-////            String::from("heap") => (),
-//            "shell" => ShellSort,
-//            "merge" => MergeSort,
-////            String::from("random") => (),
-//            "seletction" => SelectionSort,
-//            _ => (),
-//        };
         let length :u32 = document().get_element_by_id("size").unwrap().get_attribute("value").unwrap().parse().expect("not an Number");
-        current_process = Some(start_sorting(length,delay.clone(), &QuickSort));
+        let value_of_selected = js!{
+                    var e = document.getElementById("sorting");
+                    return e.options[e.selectedIndex].value;
+                    };
+        let sorting_selection = value_of_selected.as_str().unwrap();
+        current_process = match sorting_selection {
+            "bubble" => Some(start_sorting(length,delay.clone(), &BubbleSort)),
+            "quick" =>  Some(start_sorting(length,delay.clone(), &QuickSort)),
+//            String::from("counting") => (),
+//            String::from("heap") => (),
+            "shell" =>  Some(start_sorting(length,delay.clone(), &ShellSort)),
+            "merge" => Some(start_sorting(length,delay.clone(), &MergeSort)),
+            "random" =>  Some(start_sorting(length,delay.clone(), &RandomSort)),
+            "selection" => Some(start_sorting(length,delay.clone(), &SelectionSort)),
+            _ => panic!("not Implemented"),
+        };
     });
     stdweb::event_loop();
 }
