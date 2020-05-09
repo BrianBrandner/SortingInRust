@@ -23,7 +23,7 @@
     <canvas id="canvas" width="1850" height="800">
     </canvas>
     <script src="sorting_in_rust.js"></script>
-    <label><br>Sorting algorithm:
+    <label class="select-wrapper" ><br>Sorting algorithm:
         <select id = "sorting">
             <option value="bubble">Bubble sort</option>
             <option value="quick">Quick sort</option>
@@ -45,7 +45,7 @@
 <!--            <option value="etc" >etc.</option>-->
         </select>
     </label>
-    <button type="button" id="start" >Start</button>
+    <button class="button" type="button" id="start" >Start</button>
     Time needed to sort: <span id="elapsed_time">--</span>ms
     Swaps needed to sort: <span id="steps">--</span> swaps<br>
     <div class="slidecontainer"> Time between steps: <span id="slider_time_value">333</span>ms <br>
