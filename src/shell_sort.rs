@@ -13,7 +13,6 @@ impl SortingAlg for ShellSort {
             }
             count_sublist /= 2; // makes gap as half of previous
         }
-        array[pos] = val_current;
     }
 }
 
@@ -28,6 +27,7 @@ fn insertion(array: &mut Vec<u32>, start: usize, gap: usize, steps: &mut Vec<Vec
             pos = pos - gap;
             steps.push(array.clone())
         }
+        array[pos] = val_current;
         steps.push(array.clone())
     }
 }

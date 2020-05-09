@@ -7,6 +7,10 @@ extern crate  instant;
 use crate::canvas::Canvas;
 use std::borrow::{Borrow, BorrowMut};
 use bubble_sort::BubbleSort;
+use shell_sort::ShellSort;
+use selection_sort::SelectionSort;
+use quick_sort::QuickSort;
+use merge_sort::MergeSort;
 
 mod bubble_sort;
 mod random_sort;
@@ -25,10 +29,7 @@ use instant::{Instant};
 use stdweb::web::event::{ClickEvent, IEvent, InputEvent};
 use std::rc::Rc;
 use std::sync::{RwLock, Mutex};
-use crate::shell_sort::ShellSort;
-use crate::selection_sort::SelectionSort;
-use crate::quick_sort::QuickSort;
-use crate::merge_sort::MergeSort;
+
 
 trait SortingAlg {
     fn sort(&self,array: & mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
@@ -44,7 +45,6 @@ struct SortingProcess {
 
 fn main() {
     stdweb::initialize();
-    let length :u32 = document().get_element_by_id("size").unwrap().get_attribute("value").unwrap().parse().expect("not an Number");
     let slider_time = document().query_selector( "#millsec" ).unwrap().unwrap();
     let mut delay: Rc<RwLock<u32>> = {
         let attr_value = slider_time.get_attribute("value").unwrap();
@@ -58,10 +58,23 @@ fn main() {
     let mut current_process: Option<Rc<RwLock<SortingProcess>>> = None;
     let button = document().query_selector( "#start" ).unwrap().unwrap();
     button.add_event_listener( move | sorting: ClickEvent| {
-        if let Some(process) = &current_process{
+        if let Some(process) = &current_process {
             process.write().unwrap().abort = true;
         }
-        current_process = Some(start_sorting(length,delay.clone(), &MergeSort));
+//        let sorting_selection = document().query_selector("#sorting").unwrap().unwrap().get_attribute("value").unwrap();
+//        let sorting_alg: SortingAlg = match sorting_selection.as_str() {
+//            "bubble" => BubbleSort,
+//            "quick" => QuickSort,
+////            String::from("counting") => (),
+////            String::from("heap") => (),
+//            "shell" => ShellSort,
+//            "merge" => MergeSort,
+////            String::from("random") => (),
+//            "seletction" => SelectionSort,
+//            _ => (),
+//        };
+        let length :u32 = document().get_element_by_id("size").unwrap().get_attribute("value").unwrap().parse().expect("not an Number");
+        current_process = Some(start_sorting(length,delay.clone(), &QuickSort));
     });
     stdweb::event_loop();
 }
@@ -89,14 +102,15 @@ fn start_sorting<S: SortingAlg>(length: u32, delay : Rc<RwLock<u32>>, sorting_al
 
 fn draw_step(sorting_process: Rc<RwLock<SortingProcess>>){
     if sorting_process.read().unwrap().abort {
+        sorting_process.read().unwrap().canvas.set_canvase_color("white");
         return;
     }
     let delay = *sorting_process.read().unwrap().delay.read().unwrap();
     set_timeout(move ||{
         let mut process = sorting_process.write().unwrap();
-        if !process.sorting_steps.is_empty() {
-            let remaining_steps = process.sorting_steps.split_off(1);
-            draw_array(&process.canvas, &process.sorting_steps[0]);
+        if process.sorting_steps.len() >= 2{
+            let remaining_steps = process.sorting_steps.split_off(2);
+            draw_array(&process.canvas, &process.sorting_steps[1], &process.sorting_steps[0]);
             process.sorting_steps = remaining_steps;
             drop(process);
             draw_step(sorting_process);
@@ -105,19 +119,24 @@ fn draw_step(sorting_process: Rc<RwLock<SortingProcess>>){
 }
 
 
-fn draw_array(canvas: &Canvas, array: &Vec<u32>) {
+fn draw_array(canvas: &Canvas, array: &Vec<u32>, color: &Vec<u32>) {
     canvas.set_canvase_color("#ccd1d1");
     let mut i: i32 = 0;
     while i < array.len() as i32 {
-        draw_column(canvas.borrow(), array[i as usize] as u32, i as u32);
+        let color = if color[0] == i as u32 || color[1] == i as u32{
+            "red"
+        }else {
+            "green"
+        };
+        draw_column(canvas.borrow(), array[i as usize] as u32, i as u32, color);
         i = i + 1;
     };
 }
 
-fn draw_column(canvas: &Canvas, height: u32, position: u32) {
+fn draw_column(canvas: &Canvas, height: u32, position: u32, color: &str) {
     let mut i = canvas.height - 1;
     while i >= canvas.height - height {
-        canvas.draw(position, i, "green");
+        canvas.draw(position, i, color);
         i = i -1;
     }
 }
