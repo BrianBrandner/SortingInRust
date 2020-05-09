@@ -2,7 +2,7 @@
 #[warn(unused_imports)]
 
 extern crate stdweb;
-extern crate  instant;
+extern crate instant;
 
 use crate::canvas::Canvas;
 use std::borrow::{Borrow, BorrowMut};
@@ -12,6 +12,7 @@ use selection_sort::SelectionSort;
 use quick_sort::QuickSort;
 use merge_sort::MergeSort;
 use random_sort::RandomSort;
+use insertion_sort::InsertionSort;
 
 mod bubble_sort;
 mod random_sort;
@@ -21,6 +22,7 @@ mod heap_sort;
 mod merge_sort;
 mod selection_sort;
 mod shell_sort;
+mod insertion_sort;
 mod canvas;
 
 use rand::thread_rng;
@@ -80,6 +82,7 @@ fn main() {
             "merge" => Some(start_sorting(length,delay.clone(), &MergeSort)),
             "random" =>  Some(start_sorting(length,delay.clone(), &RandomSort)),
             "selection" => Some(start_sorting(length,delay.clone(), &SelectionSort)),
+            "insertion" => Some(start_sorting(length,delay.clone(), &InsertionSort)),
             _ => panic!("not Implemented"),
         };
     });

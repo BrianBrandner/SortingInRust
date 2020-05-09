@@ -17,26 +17,23 @@
             document.getElementById("slider_size_value").innerHTML=x;
             document.getElementById("size").setAttribute("value",x);
         }
-        function disableBtn() {
-            document.getElementById("start").disabled = true;
-        }
-
     </script>
 </head>
 <body>
     <canvas id="canvas" width="1850" height="800">
     </canvas>
     <script src="sorting_in_rust.js"></script>
-    <label><br>Sorting Algorithm:
+    <label><br>Sorting algorithm:
         <select id = "sorting">
-            <option value="bubble">Bubblesort</option>
-            <option value="quick">Quicksort</option>
-            <option value="counting">Contingsort</option>
-            <option value="heap">Heapsort</option>
-            <option value="shell">Shellsort</option>
-            <option value="merge">Mergesort</option>
-            <option value="random">Randomsort</option>
-            <option value="selection">Selectionsort</option>
+            <option value="bubble">Bubble sort</option>
+            <option value="quick">Quick sort</option>
+            <option value="counting">Counting sort</option>
+            <option value="heap">Heap sort</option>
+            <option value="shell">Shell sort</option>
+            <option value="merge">Merge sort</option>
+            <option value="random">Random sort</option>
+            <option value="selection">Selection sort</option>
+            <option value="insertion">Insertion sort</option>
         </select>
     </label>
     <label>
@@ -45,7 +42,7 @@
             <option value="random">Random</option>
             <option value="reversed">Reversed</option>
             <option value="n-2">N-2-Equal</option>
-            <option value="etc" >etc.</option>
+<!--            <option value="etc" >etc.</option>-->
         </select>
     </label>
     <button type="button" id="start" >Start</button>
