@@ -11,6 +11,7 @@ use shell_sort::ShellSort;
 use selection_sort::SelectionSort;
 use quick_sort::QuickSort;
 use merge_sort::MergeSort;
+use random_sort::RandomSort;
 
 mod bubble_sort;
 mod random_sort;
@@ -29,7 +30,6 @@ use instant::{Instant};
 use stdweb::web::event::{ClickEvent, IEvent, InputEvent};
 use std::rc::Rc;
 use std::sync::{RwLock, Mutex};
-
 
 trait SortingAlg {
     fn sort(&self,array: & mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
@@ -80,7 +80,7 @@ fn main() {
 }
 
 fn start_sorting<S: SortingAlg>(length: u32, delay : Rc<RwLock<u32>>, sorting_alg: &S) -> Rc<RwLock<SortingProcess>> {
-    let mut array = create_shuffled_vector(length);
+    let mut array = create_n_2_vector(length);
     let canvas = Canvas::new("canvas", length, length + 5);
     let mut sorting_steps: Vec<Vec<u32>> = vec![array.clone()];
     let start = Instant::now();
@@ -151,5 +151,18 @@ pub fn create_shuffled_vector(length: u32) -> Vec<u32> {
 fn create_reversed_vector(length: u32) -> Vec<u32> {
     let mut vec: Vec<u32> = (1..length+1).collect();
     vec.reverse();
+    vec
+}
+
+fn create_n_2_vector(length: u32) -> Vec<u32> {
+    let mut vec: Vec<u32> = vec![];
+    vec.push(1);
+
+    for i in 1..length - 1 {
+        vec.push(length / 2);
+    }
+    vec.push(length);
+
+    vec.shuffle(&mut thread_rng());
     vec
 }
