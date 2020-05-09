@@ -30,6 +30,8 @@ use instant::{Instant};
 use stdweb::web::event::{ClickEvent, IEvent, InputEvent};
 use std::rc::Rc;
 use std::sync::{RwLock, Mutex};
+use crate::heap_sort::HeapSort;
+use crate::counting_sort::CountingSort;
 
 trait SortingAlg {
     fn sort(&self,array: & mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
@@ -72,8 +74,8 @@ fn main() {
         current_process = match sorting_selection {
             "bubble" => Some(start_sorting(length,delay.clone(), &BubbleSort)),
             "quick" =>  Some(start_sorting(length,delay.clone(), &QuickSort)),
-//            String::from("counting") => (),
-//            String::from("heap") => (),
+            "counting" => Some(start_sorting(length,delay.clone(), &CountingSort)),
+            "heap" => Some(start_sorting(length,delay.clone(), &HeapSort)),
             "shell" =>  Some(start_sorting(length,delay.clone(), &ShellSort)),
             "merge" => Some(start_sorting(length,delay.clone(), &MergeSort)),
             "random" =>  Some(start_sorting(length,delay.clone(), &RandomSort)),
@@ -85,15 +87,30 @@ fn main() {
 }
 
 fn start_sorting<S: SortingAlg>(length: u32, delay : Rc<RwLock<u32>>, sorting_alg: &S) -> Rc<RwLock<SortingProcess>> {
-    let mut array = create_n_2_vector(length);
+    let generating_value = js!{
+                    var e = document.getElementById("generating");
+                    return e.options[e.selectedIndex].value;
+                    };
+    let generating_alg = generating_value.as_str().unwrap();
+    let mut array = match generating_alg {
+        "random" => create_shuffled_vector(length),
+        "reversed" => create_reversed_vector(length),
+        "n-2" => create_n_2_vector(length),
+        _ => panic!("not Implemented"),
+    };
     let canvas = Canvas::new("canvas", length, length + 5);
-    let mut sorting_steps: Vec<Vec<u32>> = vec![array.clone()];
+    let mut sorting_steps: Vec<Vec<u32>> = vec![vec![]];
     let start = Instant::now();
     sorting_alg.sort(&mut array, &mut sorting_steps);
     let duration = start.elapsed().as_millis() as i32;
     let time_element = document().query_selector("#elapsed_time").unwrap().unwrap();
     js!{
     @{time_element}.innerHTML = @{duration};
+    };
+    let time_element = document().query_selector("#steps").unwrap().unwrap();
+    let steps_needed = ((sorting_steps.len()-1)/4) as i32;
+    js!{
+    @{time_element}.innerHTML = @{steps_needed};
     };
     let sorting_process = Rc::new(RwLock::new(SortingProcess{
         canvas,
@@ -114,8 +131,9 @@ fn draw_step(sorting_process: Rc<RwLock<SortingProcess>>){
     set_timeout(move ||{
         let mut process = sorting_process.write().unwrap();
         if process.sorting_steps.len() >= 2{
+            js!(console.log("Ahllo"+ @{&process.sorting_steps}););
             let remaining_steps = process.sorting_steps.split_off(2);
-            draw_array(&process.canvas, &process.sorting_steps[1], &process.sorting_steps[0]);
+            draw_array(&process.canvas, &process.sorting_steps[0], &process.sorting_steps[1]);
             process.sorting_steps = remaining_steps;
             drop(process);
             draw_step(sorting_process);
@@ -125,10 +143,11 @@ fn draw_step(sorting_process: Rc<RwLock<SortingProcess>>){
 
 
 fn draw_array(canvas: &Canvas, array: &Vec<u32>, color: &Vec<u32>) {
-    canvas.set_canvase_color("#ccd1d1");
+    canvas.set_canvase_color("white");
     let mut i: i32 = 0;
     while i < array.len() as i32 {
-        let color = if color[0] == i as u32 || color[1] == i as u32{
+        let temp: u32 = i as u32;
+        let color = if color.contains(&temp){
             "red"
         }else {
             "green"

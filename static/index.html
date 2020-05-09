@@ -42,14 +42,15 @@
     <label>
         Generating Algorithm:
         <select id = "generating">
-            <option>Random</option>
-            <option>Reversed</option>
-            <option>Sorted</option>
-            <option>etc.</option>
+            <option value="random">Random</option>
+            <option value="reversed">Reversed</option>
+            <option value="n-2">N-2-Equal</option>
+            <option value="etc" >etc.</option>
         </select>
     </label>
-    <button type="button" id="start" >Click Me!</button>
-    Time needed to sort: <span id="elapsed_time">--</span>ms<br>
+    <button type="button" id="start" >Start</button>
+    Time needed to sort: <span id="elapsed_time">--</span>ms
+    Swaps needed to sort: <span id="steps">--</span> swaps<br>
     <div class="slidecontainer"> Time between steps: <span id="slider_time_value">333</span>ms <br>
         <label>
         <input type="range" min="0" max="1000" value="333" class="slider" id="millsec"  oninput="show_time_value(this.value);">
@@ -57,7 +58,7 @@
     </div>
     <div class="slidecontainer"> Size of array: <span id="slider_size_value">25</span> numbers<br>
         <label>
-        <input type="range" min="10" max="150" value="25" class="slider" id="size" oninput="show_size_value(this.value);">
+        <input type="range" min="3" max="150" value="25" class="slider" id="size" oninput="show_size_value(this.value);">
         </label>
     </div>
 </body>

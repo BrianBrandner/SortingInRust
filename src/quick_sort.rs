@@ -24,10 +24,10 @@ fn _partition(array: &mut Vec<u32>, lo: isize, hi: isize, steps: &mut Vec<Vec<u3
             steps.push(array.clone());
             steps.push(vec![i as u32,j as u32]);
             array.swap(i as usize, j as usize);
+            steps.push(array.clone());
+            steps.push(vec![i as u32,j as u32]);
         }
     }
-    steps.push(array.clone());
-    steps.push(vec![i as u32,pivot as u32]);
     array.swap(i as usize, pivot as usize);
     steps.push(array.clone());
     steps.push(vec![i as u32,pivot as u32]);
@@ -44,7 +44,10 @@ fn _quick_sort(array: &mut Vec<u32>, lo: isize, hi: isize, steps: &mut Vec<Vec<u
 
 impl SortingAlg for QuickSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
+        steps.clear();
         let len = array.len();
         _quick_sort(array, 0, (len - 1) as isize, steps);
+        steps.push(array.clone());
+        steps.push(vec![]);
     }
 }

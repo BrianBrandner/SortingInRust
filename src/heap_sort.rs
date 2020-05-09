@@ -10,6 +10,8 @@ pub struct HeapSort;
 
 impl SortingAlg for HeapSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
+        steps.clear();
+
         if array.len() <= 1 {
             return; // already sorted
         }
@@ -26,6 +28,8 @@ impl SortingAlg for HeapSort {
 
             array.append(&mut temp)
         }
+        steps.push(array.clone());
+        steps.push(vec![]);
     }
 }
 

@@ -24,27 +24,42 @@ fn _merge(array: &mut Vec<u32>, lo: usize, mid: usize, hi: usize, steps: &mut Ve
     // pick smaller element one by one from either left or right half
     while l < lsize && r < rsize {
         if left_half[l] < right_half[r] {
+            steps.push(array.clone());
+            steps.push(vec![a as u32 , l as u32]);
             array[a] = left_half[l];
+            steps.push(array.clone());
+            steps.push(vec![a as u32 , l as u32]);
             l += 1;
         } else {
+            steps.push(array.clone());
+            steps.push(vec![a as u32 , r as u32]);
             array[a] = right_half[r];
+            steps.push(array.clone());
+            steps.push(vec![a as u32 , r as u32]);
             r += 1;
         }
         a += 1;
     }
     // put all the remaining ones
     while l < lsize {
+        steps.push(array.clone());
+        steps.push(vec![a as u32 , l as u32]);
         array[a] = left_half[l];
+        steps.push(array.clone());
+        steps.push(vec![a as u32 , l as u32]);
         l += 1;
         a += 1;
     }
 
     while r < rsize {
+        steps.push(array.clone());
+        steps.push(vec![a as u32 , r as u32]);
         array[a] = right_half[r];
+        steps.push(array.clone());
+        steps.push(vec![a as u32 , r as u32]);
         r += 1;
         a += 1;
     }
-    steps.push(array.clone())
 }
 
 fn _merge_sort(array: &mut Vec<u32>, lo: usize, hi: usize, steps: &mut Vec<Vec<u32>>) {
@@ -58,9 +73,12 @@ fn _merge_sort(array: &mut Vec<u32>, lo: usize, hi: usize, steps: &mut Vec<Vec<u
 
 impl SortingAlg for MergeSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
+        steps.clear();
         let len = array.len();
         if len > 1 {
             _merge_sort(array, 0, len - 1, steps);
         }
+        steps.push(array.clone());
+        steps.push(vec![])
     }
 }

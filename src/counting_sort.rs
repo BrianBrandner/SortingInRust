@@ -11,6 +11,7 @@ pub struct CountingSort;
 
 impl SortingAlg for CountingSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
+        steps.clear();
         let mut occurences: Vec<usize> = vec![0; array.len() + 1];
 
         for &data in array.iter() {
@@ -22,13 +23,15 @@ impl SortingAlg for CountingSort {
         for (data, &number) in occurences.iter().enumerate() {
             for _ in 0..number {
                 steps.push(array.clone());
-                steps.push(vec![i as u32, i as u32]);
+                steps.push(vec![i as u32]);
                 array[i] = data as u32;
                 steps.push(array.clone());
-                steps.push(vec![i as u32, i as u32]);
+                steps.push(vec![i as u32]);
                 i += 1;
             }
         }
+        steps.push(array.clone());
+        steps.push(vec![]);
     }
 }
 
