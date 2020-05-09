@@ -32,7 +32,6 @@ fn _merge(array: &mut Vec<u32>, lo: usize, mid: usize, hi: usize, steps: &mut Ve
         }
         a += 1;
     }
-
     // put all the remaining ones
     while l < lsize {
         array[a] = left_half[l];

@@ -8,6 +8,8 @@ fn _partition(array: &mut Vec<u32>, lo: isize, hi: isize, steps: &mut Vec<Vec<u3
     let mut j = hi;
 
     loop {
+        steps.push(array.clone());
+        steps.push(vec![i as u32,pivot as u32]);
         i += 1;
         while array[i as usize] < array[pivot] {
             i += 1;
@@ -19,11 +21,16 @@ fn _partition(array: &mut Vec<u32>, lo: isize, hi: isize, steps: &mut Vec<Vec<u3
         if i >= j {
             break;
         } else {
+            steps.push(array.clone());
+            steps.push(vec![i as u32,j as u32]);
             array.swap(i as usize, j as usize);
         }
     }
+    steps.push(array.clone());
+    steps.push(vec![i as u32,pivot as u32]);
     array.swap(i as usize, pivot as usize);
     steps.push(array.clone());
+    steps.push(vec![i as u32,pivot as u32]);
     i
 }
 
