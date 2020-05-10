@@ -2,11 +2,13 @@ use crate::SortingAlg;
 
 pub struct QuickSort;
 
+/// QuickSort is a quick in-place O(n*log(n)) sorting algorithm but in its worst case it can hit
+/// O(n²)
 impl QuickSort {
-    fn partition(array: &mut Vec<u32>, lo: isize, hi: isize, steps: &mut Vec<Vec<u32>>) -> isize {
-        let pivot = hi as usize;
-        let mut i = lo - 1;
-        let mut j = hi;
+    fn partition(array: &mut Vec<u32>, low: isize, high: isize, steps: &mut Vec<Vec<u32>>) -> isize {
+        let pivot = high as usize;
+        let mut i = low - 1;
+        let mut j = high;
 
         loop {
             steps.push(array.clone());
@@ -35,11 +37,11 @@ impl QuickSort {
         i
     }
 
-    fn quick_sort(array: &mut Vec<u32>, lo: isize, hi: isize, steps: &mut Vec<Vec<u32>>) {
-        if lo < hi {
-            let p = QuickSort::partition(array, lo, hi, steps);
-            QuickSort::quick_sort(array, lo, p - 1, steps);
-            QuickSort::quick_sort(array, p + 1, hi, steps);
+    fn quick_sort(array: &mut Vec<u32>, low: isize, high: isize, steps: &mut Vec<Vec<u32>>) {
+        if low < high {
+            let p = QuickSort::partition(array, low, high, steps);
+            QuickSort::quick_sort(array, low, p - 1, steps);
+            QuickSort::quick_sort(array, p + 1, high, steps);
         }
     }
 }

@@ -7,6 +7,8 @@ use crate::SortingAlg;
 
 pub struct CountingSort;
 
+/// Linear, integer only sorting algorithm, best case O(n*log(n)). Sorts them according to the keys.
+///
 impl SortingAlg for CountingSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         let mut occurences: Vec<usize> = vec![0; array.len() + 1];

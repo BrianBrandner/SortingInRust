@@ -3,6 +3,7 @@ use crate::SortingAlg;
 pub struct StalinSort;
 
 /// StalinSort is a meme sorting algorithm which neutralizes every element which is not in order.
+/// Its complexity is always O(n).
 impl SortingAlg for StalinSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         let mut i = 0;
