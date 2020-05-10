@@ -8,14 +8,18 @@ pub struct InsertionSort;
 impl SortingAlg for InsertionSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         for mut i in 0..array.len() {
-            for j in (0..i + 1).rev() {
+            for j in (0..i).rev() {
+                steps.push(array.clone());
+                steps.push(vec![i as u32, j as u32]);
+
                 if array[i] < array[j] {
-                    steps.push(array.clone());
-                    steps.push(vec![i as u32, j as u32]);
                     array.swap(i, j);
                     steps.push(array.clone());
                     steps.push(vec![i as u32, j as u32]);
                     i -= 1;
+                } else {
+                    // If a smaller element is hit, a new iteration of the outer loop will begin.
+                    break;
                 }
             }
         }
