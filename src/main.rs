@@ -48,33 +48,44 @@ struct SortingProcess {
 
 fn main() {
     stdweb::initialize();
+
+    // Get slider element for delay and save value in delay
     let slider_time = document().query_selector("#millsec").unwrap().unwrap();
     let delay: Rc<RwLock<u32>> = {
         let attr_value = slider_time.get_attribute("value").unwrap();
-        Rc::new(RwLock::new(attr_value.parse().expect("not an Number")))
+        Rc::new(RwLock::new(attr_value.parse().expect("not a Number")))
     };
+
+    // Event listener for slider input change. If value of slider changes delay will be updated
     let temp_rc = delay.clone();
     slider_time.clone().add_event_listener(move |_: InputEvent| {
         let attr_value = slider_time.get_attribute("value").unwrap();
-        *temp_rc.write().unwrap() = attr_value.parse().expect("not an Number");
+        *temp_rc.write().unwrap() = attr_value.parse().expect("not a Number");
     });
 
     let mut current_process: Option<Rc<RwLock<SortingProcess>>> = None;
 
+    // Event listener button pressed. If button is pressed sorting starts
     let button = document().query_selector("#start").unwrap().unwrap();
     button.add_event_listener(move |_: ClickEvent| {
 
+        // If there is already a process running it will be aborted and the canvas will be cleared
         if let Some(process) = &current_process {
             process.read().unwrap().canvas.set_canvas_color("white");
             process.write().unwrap().abort = true;
         }
+
+        // Get length for array size from slider element
         let length: u32 = document().get_element_by_id("size").unwrap().get_attribute("value").unwrap().parse().expect("not an Number");
+
+        // Get value of selected sorting algorithm
         let value_of_selected = js! {
             var e = document.getElementById("sorting");
             return e.options[e.selectedIndex].value;
         };
         let sorting_selection = value_of_selected.as_str().unwrap();
 
+        // Choose which sorting to start by sorting_selection
         current_process = Some(match sorting_selection {
             "bubble" => start_sorting(length, delay.clone(), &BubbleSort),
             "quick" => start_sorting(length, delay.clone(), &QuickSort),
@@ -93,11 +104,14 @@ fn main() {
 }
 
 fn start_sorting<S: SortingAlg>(length: u32, delay: Rc<RwLock<u32>>, sorting_alg: &S) -> Rc<RwLock<SortingProcess>> {
+
+    // Get value of selected generating algorithm
     let generating_value = js! {
         var e = document.getElementById("generating");
         return e.options[e.selectedIndex].value;
     };
 
+    // Generate array by which generating value is selected
     let generating_alg = generating_value.as_str().unwrap();
     let mut array = match generating_alg {
         "random" => create_shuffled_vector(length),
@@ -106,13 +120,21 @@ fn start_sorting<S: SortingAlg>(length: u32, delay: Rc<RwLock<u32>>, sorting_alg
         "sorted" => create_sorted_vector(length),
         _ => panic!("not Implemented"),
     };
+
+    // Create new canvas to draw on and a new array to store all steps in
     let canvas = Canvas::new("canvas", length, length + 5);
     let mut sorting_steps = Vec::new();
+
+
+    // Start measuring time and start sorting algorithm
     let start = Instant::now();
     sorting_alg.sort(&mut array, &mut sorting_steps);
-    let duration = start.elapsed().as_millis() as i32;
-    let time_element = document().query_selector("#elapsed_time").unwrap().unwrap();
 
+    // Get elapsed time in ms
+    let duration = start.elapsed().as_millis() as i32;
+
+    // Set elapsed time and needed swaps in HTML
+    let time_element = document().query_selector("#elapsed_time").unwrap().unwrap();
     js! {
         @{time_element}.innerHTML = @{duration};
     };
@@ -122,25 +144,35 @@ fn start_sorting<S: SortingAlg>(length: u32, delay: Rc<RwLock<u32>>, sorting_alg
 
         @{steps_element}.innerHTML = @{steps_needed};
     };
+
+    // Create new process to be later changed
     let sorting_process = Rc::new(RwLock::new(SortingProcess {
         canvas,
         delay,
         sorting_steps,
         abort: false,
     }));
+
+    // Start drawing steps
     draw_step(sorting_process.clone());
     sorting_process
 }
 
 fn draw_step(sorting_process: Rc<RwLock<SortingProcess>>) {
+
+    // If abort ist true if will stop to draw and clean the canvas
     if sorting_process.read().unwrap().abort {
         sorting_process.read().unwrap().canvas.set_canvas_color("white");
         return;
     }
 
     let delay = *sorting_process.read().unwrap().delay.read().unwrap();
+
+    // Moves everything in it and starts function after delay in ms
     set_timeout(move || {
+
         let mut process = sorting_process.write().unwrap();
+
         if process.sorting_steps.len() >= 2 {
             let remaining_steps = process.sorting_steps.split_off(2);
             draw_array(&process.canvas, &process.sorting_steps[0], &process.sorting_steps[1]);
