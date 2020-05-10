@@ -6,7 +6,6 @@ pub struct SelectionSort;
 /// swaps place with it's current position `right` in the vector.
 impl SortingAlg for SelectionSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
-        steps.clear();
         let len = array.len();
         for left in 0..len {
             let mut smallest = left;

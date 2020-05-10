@@ -12,7 +12,6 @@ pub struct Canvas {
     pub height: u32,
 }
 
-
 impl Canvas {
     pub fn new(attr_id: &str, width: u32, height: u32) -> Canvas {
         let canvas: CanvasElement = document().query_selector(attr_id)
@@ -35,7 +34,8 @@ impl Canvas {
         }
     }
 
-    pub fn set_canvase_color(&self, color: &str) {
+    pub fn set_canvas_color(&self, color: &str) {
+
         self.ctx.set_fill_style_color(color);
         self.ctx.fill_rect(
             0.0,
