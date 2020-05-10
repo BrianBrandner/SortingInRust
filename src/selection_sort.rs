@@ -10,6 +10,8 @@ impl SortingAlg for SelectionSort {
         for left in 0..len {
             let mut smallest = left;
             for right in (left + 1)..len {
+                steps.push(array.clone());
+                steps.push(vec![right as u32, smallest as u32]);
                 if array[right] < array[smallest] {
                     smallest = right;
                 }
