@@ -35,6 +35,7 @@ impl Canvas {
     }
 
     pub fn set_canvas_color(&self, color: &str) {
+
         self.ctx.set_fill_style_color(color);
         self.ctx.fill_rect(
             0.0,
@@ -43,6 +44,7 @@ impl Canvas {
             f64::from(self.height * self.scaled_height),
         );
     }
+
 
     pub fn draw(&self, x: u32, y: u32, color: &str) {
         assert!(x < self.width);

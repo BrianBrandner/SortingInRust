@@ -1,5 +1,5 @@
 #[macro_use]
-#[warn(unused_imports)]
+
 extern crate stdweb;
 extern crate instant;
 
@@ -61,6 +61,7 @@ fn main() {
 
     let button = document().query_selector("#start").unwrap().unwrap();
     button.add_event_listener(move |_: ClickEvent| {
+
         if let Some(process) = &current_process {
             process.write().unwrap().abort = true;
         }
@@ -70,6 +71,7 @@ fn main() {
             return e.options[e.selectedIndex].value;
         };
         let sorting_selection = value_of_selected.as_str().unwrap();
+
         current_process = Some(match sorting_selection {
             "bubble" => start_sorting(length, delay.clone(), &BubbleSort),
             "quick" => start_sorting(length, delay.clone(), &QuickSort),
@@ -80,6 +82,7 @@ fn main() {
             "random" => start_sorting(length, delay.clone(), &RandomSort),
             "selection" => start_sorting(length, delay.clone(), &SelectionSort),
             "insertion" => start_sorting(length, delay.clone(), &InsertionSort),
+
             _ => panic!("not Implemented"),
         });
     });
@@ -91,6 +94,7 @@ fn start_sorting<S: SortingAlg>(length: u32, delay: Rc<RwLock<u32>>, sorting_alg
         var e = document.getElementById("generating");
         return e.options[e.selectedIndex].value;
     };
+
     let generating_alg = generating_value.as_str().unwrap();
     let mut array = match generating_alg {
         "random" => create_shuffled_vector(length),
@@ -105,12 +109,14 @@ fn start_sorting<S: SortingAlg>(length: u32, delay: Rc<RwLock<u32>>, sorting_alg
     sorting_alg.sort(&mut array, &mut sorting_steps);
     let duration = start.elapsed().as_millis() as i32;
     let time_element = document().query_selector("#elapsed_time").unwrap().unwrap();
+
     js! {
         @{time_element}.innerHTML = @{duration};
     };
     let steps_element = document().query_selector("#steps").unwrap().unwrap();
     let steps_needed = ((sorting_steps.len() - 1) / 4) as i32;
     js! {
+
         @{steps_element}.innerHTML = @{steps_needed};
     };
     let sorting_process = Rc::new(RwLock::new(SortingProcess {
@@ -171,7 +177,6 @@ pub fn create_shuffled_vector(length: u32) -> Vec<u32> {
     vec.shuffle(&mut thread_rng());
     vec
 }
-
 
 fn create_reversed_vector(length: u32) -> Vec<u32> {
     let mut vec: Vec<u32> = (1..length + 1).collect();

@@ -2,6 +2,8 @@ use crate::SortingAlg;
 
 pub struct BubbleSort;
 
+/// Bubble sort moves the largest element to the end of the vector.
+
 impl SortingAlg for BubbleSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         for i in 0..array.len() {

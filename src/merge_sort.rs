@@ -2,17 +2,17 @@ use crate::SortingAlg;
 
 pub struct MergeSort;
 
-impl MergeSort {
-    fn merge(array: &mut Vec<u32>, lo: usize, mid: usize, hi: usize, steps: &mut Vec<Vec<u32>>) {
-        // create temporary arrays to support merge
-        let mut left_half = Vec::new();
-        let mut right_half = Vec::new();
-        for i in lo..mid + 1 {
-            left_half.push(array[i]);
-        }
-        for i in mid + 1..hi + 1 {
-            right_half.push(array[i]);
-        }
+
+fn _merge(array: &mut Vec<u32>, lo: usize, mid: usize, hi: usize, steps: &mut Vec<Vec<u32>>) {
+    // create temporary vectors to support merge
+    let mut left_half = Vec::new();
+    let mut right_half = Vec::new();
+    for i in lo..mid + 1 {
+        left_half.push(array[i]);
+    }
+    for i in mid + 1..hi + 1 {
+        right_half.push(array[i]);
+    }
 
         let lsize = left_half.len();
         let rsize = right_half.len();

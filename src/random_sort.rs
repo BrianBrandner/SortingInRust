@@ -12,6 +12,7 @@ impl RandomSort {
             if array[i] < previous {
                 return false;
             }
+          
             steps.push(array.clone());
             steps.push(vec![i as u32, (i - 1) as u32]);
             previous = array[i]
@@ -28,6 +29,7 @@ impl SortingAlg for RandomSort {
             array.shuffle(&mut thread_rng());
             steps.push(array.clone());
             steps.push(vec![]);
+
         }
         steps.push(array.clone());
     }
