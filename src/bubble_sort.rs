@@ -10,6 +10,8 @@ impl SortingAlg for BubbleSort {
             for j in 0..array.len() - 1 - i {
                 steps.push(array.clone());
                 steps.push(vec![j as u32, (j + 1) as u32]);
+
+                // If the next element is smaller than the current one, they get swapped.
                 if array[j] > array[j + 1] {
                     array.swap(j, j + 1);
                     steps.push(array.clone());

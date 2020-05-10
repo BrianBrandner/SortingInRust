@@ -172,7 +172,7 @@ fn draw_column(canvas: &Canvas, height: u32, position: u32, color: &str) {
     }
 }
 
-pub fn create_shuffled_vector(length: u32) -> Vec<u32> {
+fn create_shuffled_vector(length: u32) -> Vec<u32> {
     let mut vec: Vec<u32> = (1..length + 1).collect();
     vec.shuffle(&mut thread_rng());
     vec

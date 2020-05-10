@@ -11,16 +11,16 @@ impl HeapSort {
     fn heapify(array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         let last_parent = (array.len() - 2) / 2;
         for i in (0..=last_parent).rev() {
-            HeapSort::move_down(array, i);
+            HeapSort::move_down(array, i, vec![], steps);
             steps.push(array.clone());
-            steps.push(vec![0 as u32, 0 as u32]);
+            steps.push(vec![i as u32]);
         }
     }
 
     /// Move the element at `root` down until `arr` is a max heap again.
     ///
     /// This assumes that the subtrees under `root` are valid max heaps already.
-    fn move_down(array: &mut Vec<u32>, mut root: usize) {
+    fn move_down(array: &mut Vec<u32>, mut root: usize, sorted_part: Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         let last = array.len() - 1;
         loop {
             let left = 2 * root + 1;
@@ -34,8 +34,17 @@ impl HeapSort {
                 left
             };
 
+            let mut buffer = array.clone();
+            buffer.append(&mut sorted_part.clone());
+            steps.push(buffer.clone());
+            steps.push(vec![root as u32, max as u32]);
+
             if array[max] > array[root] {
                 array.swap(root, max);
+                buffer = array.clone();
+                buffer.append(&mut sorted_part.clone());
+                steps.push(buffer.clone());
+                steps.push(vec![root as u32, max as u32]);
             }
             root = max;
         }
@@ -49,12 +58,14 @@ impl SortingAlg for HeapSort {
         HeapSort::heapify(array, steps);
 
         for end in (1..array.len()).rev() {
+            steps.push(array.clone());
+            steps.push(vec![0 as u32, end as u32]);
             array.swap(0, end);
             steps.push(array.clone());
             steps.push(vec![0 as u32, end as u32]);
 
             let mut temp = array.split_off(end);
-            HeapSort::move_down(array, 0);
+            HeapSort::move_down(array, 0, temp.clone(), steps);
 
             array.append(&mut temp)
         }
