@@ -1,4 +1,4 @@
-use rand::{thread_rng, Rng};
+use rand::{thread_rng};
 use rand::seq::SliceRandom;
 
 use crate::SortingAlg;
