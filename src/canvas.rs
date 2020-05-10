@@ -12,9 +12,8 @@ pub struct Canvas {
     pub height: u32,
 }
 
-
-impl Canvas{
-    pub fn new(attr_id: &str, width: u32, height: u32) -> Canvas{
+impl Canvas {
+    pub fn new(attr_id: &str, width: u32, height: u32) -> Canvas {
         let canvas: CanvasElement = document().query_selector(attr_id)
             .unwrap()
             .unwrap()
@@ -25,7 +24,7 @@ impl Canvas{
         let scaled_width = canvas.width() / width;
         let scaled_height = canvas.height() / height;
 
-        Canvas{
+        Canvas {
             canvas,
             ctx,
             scaled_width,
@@ -35,7 +34,7 @@ impl Canvas{
         }
     }
 
-    pub fn set_canvase_color(&self, color: &str){
+    pub fn set_canvas_color(&self, color: &str) {
         self.ctx.set_fill_style_color(color);
         self.ctx.fill_rect(
             0.0,
@@ -45,8 +44,7 @@ impl Canvas{
         );
     }
 
-
-    pub fn draw(&self, x: u32, y: u32, color: &str){
+    pub fn draw(&self, x: u32, y: u32, color: &str) {
         assert!(x < self.width);
         assert!(y < self.height);
 
