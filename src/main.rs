@@ -11,6 +11,7 @@ use quick_sort::QuickSort;
 use merge_sort::MergeSort;
 use random_sort::RandomSort;
 use insertion_sort::InsertionSort;
+use stalin_sort::StalinSort;
 
 mod bubble_sort;
 mod random_sort;
@@ -21,6 +22,7 @@ mod merge_sort;
 mod selection_sort;
 mod shell_sort;
 mod insertion_sort;
+mod stalin_sort;
 mod canvas;
 
 use rand::thread_rng;
@@ -63,6 +65,7 @@ fn main() {
     button.add_event_listener(move |_: ClickEvent| {
 
         if let Some(process) = &current_process {
+            process.read().unwrap().canvas.set_canvas_color("white");
             process.write().unwrap().abort = true;
         }
         let length: u32 = document().get_element_by_id("size").unwrap().get_attribute("value").unwrap().parse().expect("not an Number");
@@ -82,7 +85,7 @@ fn main() {
             "random" => start_sorting(length, delay.clone(), &RandomSort),
             "selection" => start_sorting(length, delay.clone(), &SelectionSort),
             "insertion" => start_sorting(length, delay.clone(), &InsertionSort),
-
+            "stalin" => start_sorting(length, delay.clone(), &StalinSort),
             _ => panic!("not Implemented"),
         });
     });
