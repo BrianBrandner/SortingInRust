@@ -1,5 +1,3 @@
-/// Sort a mutable slice using heap sort.
-///
 /// Heap sort is an in-place O(n log n) sorting algorithm. It is based on a
 /// max heap, a binary tree data structure whose main feature is that
 /// parent nodes are always greater or equal to their child nodes.
@@ -11,10 +9,6 @@ pub struct HeapSort;
 impl SortingAlg for HeapSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         steps.clear();
-
-        if array.len() <= 1 {
-            return; // already sorted
-        }
 
         heapify(array, steps);
 

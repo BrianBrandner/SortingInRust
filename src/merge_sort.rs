@@ -3,7 +3,7 @@ use crate::SortingAlg;
 pub struct MergeSort;
 
 fn _merge(array: &mut Vec<u32>, lo: usize, mid: usize, hi: usize, steps: &mut Vec<Vec<u32>>) {
-    // create temporary arrays to support merge
+    // create temporary vectors to support merge
     let mut left_half = Vec::new();
     let mut right_half = Vec::new();
     for i in lo..mid + 1 {

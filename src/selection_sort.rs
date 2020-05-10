@@ -2,6 +2,8 @@ use crate::SortingAlg;
 
 pub struct SelectionSort;
 
+/// This sorting algorithm looks for the `smallest` element in the unsorted part of the vector and
+/// swaps place with it's current position `right` in the vector.
 impl SortingAlg for SelectionSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         steps.clear();

@@ -2,6 +2,9 @@ use crate::SortingAlg;
 
 pub struct InsertionSort;
 
+/// InsertionSort is an in place O(n²) sorting algorithm that moves an element until it hits a
+/// smaller element. Starting with the first element, which is already sorted, this procedure takes
+/// exponentially more time as the sorted part grows.
 impl SortingAlg for InsertionSort {
     fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>) {
         steps.clear();

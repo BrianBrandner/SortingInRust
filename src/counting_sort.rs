@@ -1,9 +1,7 @@
-/// In place counting sort for collections of u32
+/// In place counting sort
 /// O(n + maxval) in time, where maxval is the biggest value an input can possibly take
 /// O(maxval) in memory
-/// u32 is chosen arbitrarly, a counting sort probably should'nt be used on data that requires bigger types.
-
-//TODO: What about maxval??
+/// u32 is chosen arbitrarly, a counting sort probably shouldn't be used on data that requires bigger types.
 
 use crate::SortingAlg;
 
@@ -17,7 +15,6 @@ impl SortingAlg for CountingSort {
         for &data in array.iter() {
             occurences[data as usize] += 1;
         }
-
 
         let mut i = 0;
         for (data, &number) in occurences.iter().enumerate() {

@@ -1,5 +1,4 @@
 #[macro_use]
-#[warn(unused_imports)]
 
 extern crate stdweb;
 extern crate instant;
@@ -35,7 +34,7 @@ use crate::heap_sort::HeapSort;
 use crate::counting_sort::CountingSort;
 
 trait SortingAlg {
-    fn sort(&self,array: & mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
+    fn sort(&self, array: &mut Vec<u32>, steps: &mut Vec<Vec<u32>>);
 }
 
 struct SortingProcess {
@@ -47,7 +46,7 @@ struct SortingProcess {
 
 fn main() {
     stdweb::initialize();
-    let slider_time = document().query_selector( "#millsec" ).unwrap().unwrap();
+    let slider_time = document().query_selector("#millsec").unwrap().unwrap();
     let delay: Rc<RwLock<u32>> = {
         let attr_value = slider_time.get_attribute("value").unwrap();
         Rc::new(  RwLock::new(attr_value.parse().expect("not an Number")))
@@ -60,7 +59,7 @@ fn main() {
 
     let mut current_process: Option<Rc<RwLock<SortingProcess>>> = None;
 
-    let button = document().query_selector( "#start" ).unwrap().unwrap();
+    let button = document().query_selector("#start").unwrap().unwrap();
     button.add_event_listener( move | _: ClickEvent| {
         if let Some(process) = &current_process {
             process.write().unwrap().abort = true;
@@ -72,22 +71,22 @@ fn main() {
                     };
         let sorting_selection = value_of_selected.as_str().unwrap();
         current_process = match sorting_selection {
-            "bubble" => Some(start_sorting(length,delay.clone(), &BubbleSort)),
-            "quick" =>  Some(start_sorting(length,delay.clone(), &QuickSort)),
-            "counting" => Some(start_sorting(length,delay.clone(), &CountingSort)),
-            "heap" => Some(start_sorting(length,delay.clone(), &HeapSort)),
-            "shell" =>  Some(start_sorting(length,delay.clone(), &ShellSort)),
-            "merge" => Some(start_sorting(length,delay.clone(), &MergeSort)),
-            "random" =>  Some(start_sorting(length,delay.clone(), &RandomSort)),
-            "selection" => Some(start_sorting(length,delay.clone(), &SelectionSort)),
-            "insertion" => Some(start_sorting(length,delay.clone(), &InsertionSort)),
+            "bubble" => Some(start_sorting(length, delay.clone(), &BubbleSort)),
+            "quick" =>  Some(start_sorting(length, delay.clone(), &QuickSort)),
+            "counting" => Some(start_sorting(length, delay.clone(), &CountingSort)),
+            "heap" => Some(start_sorting(length, delay.clone(), &HeapSort)),
+            "shell" =>  Some(start_sorting(length, delay.clone(), &ShellSort)),
+            "merge" => Some(start_sorting(length, delay.clone(), &MergeSort)),
+            "random" =>  Some(start_sorting(length, delay.clone(), &RandomSort)),
+            "selection" => Some(start_sorting(length, delay.clone(), &SelectionSort)),
+            "insertion" => Some(start_sorting(length, delay.clone(), &InsertionSort)),
             _ => panic!("not Implemented"),
         };
     });
     stdweb::event_loop();
 }
 
-fn start_sorting<S: SortingAlg>(length: u32, delay : Rc<RwLock<u32>>, sorting_alg: &S) -> Rc<RwLock<SortingProcess>> {
+fn start_sorting<S: SortingAlg>(length: u32, delay: Rc<RwLock<u32>>, sorting_alg: &S) -> Rc<RwLock<SortingProcess>> {
     let generating_value = js!{
                     var e = document.getElementById("generating");
                     return e.options[e.selectedIndex].value;
@@ -107,12 +106,12 @@ fn start_sorting<S: SortingAlg>(length: u32, delay : Rc<RwLock<u32>>, sorting_al
     let duration = start.elapsed().as_millis() as i32;
     let time_element = document().query_selector("#elapsed_time").unwrap().unwrap();
     js!{
-    @{time_element}.innerHTML = @{duration};
+        @{time_element}.innerHTML = @{duration};
     };
     let steps_element = document().query_selector("#steps").unwrap().unwrap();
     let steps_needed = ((sorting_steps.len()-1)/4) as i32;
     js!{
-    @{steps_element}.innerHTML = @{steps_needed};
+        @{steps_element}.innerHTML = @{steps_needed};
     };
     let sorting_process = Rc::new(RwLock::new(SortingProcess{
         canvas,
@@ -130,9 +129,9 @@ fn draw_step(sorting_process: Rc<RwLock<SortingProcess>>){
         return;
     }
     let delay = *sorting_process.read().unwrap().delay.read().unwrap();
-    set_timeout(move ||{
+    set_timeout(move || {
         let mut process = sorting_process.write().unwrap();
-        if process.sorting_steps.len() >= 2{
+        if process.sorting_steps.len() >= 2 {
             let remaining_steps = process.sorting_steps.split_off(2);
             draw_array(&process.canvas, &process.sorting_steps[0], &process.sorting_steps[1]);
             process.sorting_steps = remaining_steps;
@@ -148,9 +147,9 @@ fn draw_array(canvas: &Canvas, array: &Vec<u32>, color: &Vec<u32>) {
     let mut i: i32 = 0;
     while i < array.len() as i32 {
         let temp: u32 = i as u32;
-        let color = if color.contains(&temp){
+        let color = if color.contains(&temp) {
             "red"
-        }else {
+        } else {
             "green"
         };
         draw_column(&canvas, array[i as usize] as u32, i as u32, color);
@@ -172,7 +171,6 @@ pub fn create_shuffled_vector(length: u32) -> Vec<u32> {
     vec
 }
 
-
 fn create_reversed_vector(length: u32) -> Vec<u32> {
     let mut vec: Vec<u32> = (1..length+1).collect();
     vec.reverse();
@@ -193,6 +191,6 @@ fn create_n_2_vector(length: u32) -> Vec<u32> {
 }
 
 fn create_sorted_vector(length: u32) -> Vec<u32> {
-    let mut vec: Vec<u32> = (1..length+1).collect();
+    let vec: Vec<u32> = (1..length+1).collect();
     vec
 }
